@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - DiamonD</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='white'/%3E%3Ctext x='50' y='72' font-family='Arial,sans-serif' font-size='65' font-weight='900' text-anchor='middle' fill='black'%3ED%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #0a0a0a; }
+    </style>
+</head>
+<body class="text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="flex items-center gap-3">
+                    <img src="p3.png" alt="DiamonD" class="w-10 h-10 rounded-xl">
+                    <span class="text-xl font-bold tracking-tight">DiamonD</span>
+                </a>
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="index.html" class="px-4 py-2 text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition">Главная</a>
+                    <a href="shop.html" class="px-4 py-2 text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition">Магазин</a>
+                    <a href="profile.html" class="px-4 py-2 text-white bg-white/10 rounded-lg font-medium">Профиль</a>
+                    <a href="admin.html" id="adminLink" class="px-4 py-2 text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 rounded-lg transition hidden">Админ</a>
+                </div>
+                <div id="navAuth">
+                    <button onclick="showModal('login')" class="bg-white hover:bg-neutral-200 text-black px-5 py-2.5 rounded-xl font-semibold transition text-sm">Войти</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Not Logged In -->
+    <div id="notLoggedIn" class="pt-32 pb-20 px-6">
+        <div class="max-w-md mx-auto text-center">
+            <div class="w-24 h-24 bg-[#111] rounded-full flex items-center justify-center mx-auto mb-8 border border-white/10">
+                <svg class="w-12 h-12 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            </div>
+            <h1 class="text-3xl font-bold mb-3">Войдите в аккаунт</h1>
+            <p class="text-neutral-500 mb-8">Для просмотра профиля необходимо авторизоваться</p>
+            <div class="flex flex-col gap-3 max-w-xs mx-auto">
+                <button onclick="showModal('login')" class="w-full bg-white hover:bg-neutral-200 text-black py-4 rounded-xl font-bold transition">Войти</button>
+                <button onclick="showModal('register')" class="w-full bg-white/5 hover:bg-white/10 border border-white/10 py-4 rounded-xl font-semibold transition">Регистрация</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div id="profileContent" class="hidden pt-28 pb-20 px-6">
+        <div class="max-w-3xl mx-auto">
+            <!-- Notifications -->
+            <div id="keyNotifications" class="mb-6 space-y-3"></div>
+
+            <!-- Profile Header -->
+            <div class="bg-[#111] rounded-2xl border border-white/10 p-8 mb-6">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <div class="w-20 h-20 bg-neutral-800 rounded-2xl flex items-center justify-center text-3xl font-black border border-white/10" id="profileAvatar">D</div>
+                    <div class="flex-1 text-center md:text-left">
+                        <div class="flex items-center justify-center md:justify-start gap-3 mb-1">
+                            <h1 class="text-2xl font-bold" id="profileName">Пользователь</h1>
+                            <span id="profileRankBadge" class="text-sm px-2 py-0.5 rounded-lg bg-neutral-800 text-neutral-400">🌱 Новичок</span>
+                        </div>
+                        <p class="text-neutral-500 mb-3" id="profileEmail">user@example.com</p>
+                        <div class="flex flex-wrap justify-center md:justify-start gap-2">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/5 text-neutral-400 rounded-lg text-sm font-medium border border-white/10" id="profileRole">
+                                Пользователь
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-500/10 text-green-400 rounded-lg text-sm font-medium border border-green-500/20">
+                                <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+                                Активен
+                            </span>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="bg-white/5 hover:bg-red-500/10 text-neutral-400 hover:text-red-400 px-5 py-3 rounded-xl font-semibold transition flex items-center gap-2 border border-white/10 hover:border-red-500/20">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        Выйти
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-[#111] rounded-2xl border border-white/10 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-neutral-500 text-sm">Всего ключей</p>
+                            <p class="text-2xl font-bold" id="profileKeysCount">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-[#111] rounded-2xl border border-white/10 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-neutral-500 text-sm">Потрачено</p>
+                            <p class="text-2xl font-bold" id="profileSpent">0 ₽</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-[#111] rounded-2xl border border-white/10 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-neutral-500 text-sm">Дата регистрации</p>
+                            <p class="text-lg font-bold" id="profileDate">—</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div class="bg-[#111] rounded-2xl border border-white/10 mb-6 overflow-hidden">
+                <div class="p-6 border-b border-white/5 flex items-center justify-between cursor-pointer hover:bg-white/[0.02] transition" onclick="toggleNotifications()">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 relative">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            <span id="unreadBadge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold hidden">0</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">Уведомления</h3>
+                            <p class="text-neutral-500 text-sm">Письма от администрации</p>
+                        </div>
+                    </div>
+                    <svg id="notificationsArrow" class="w-5 h-5 text-neutral-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+                <div id="notificationsPanel" class="hidden">
+                    <div id="notificationsList" class="p-4 space-y-3 max-h-96 overflow-y-auto">
+                        <p class="text-neutral-500 text-center py-8">Нет уведомлений</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keys Section -->
+            <div class="bg-[#111] rounded-2xl border border-white/10 mb-6 overflow-hidden">
+                <div class="p-6 border-b border-white/5 flex items-center justify-between cursor-pointer hover:bg-white/[0.02] transition" onclick="toggleKeys()">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">Мои ключи</h3>
+                            <p class="text-neutral-500 text-sm">Нажмите чтобы развернуть</p>
+                        </div>
+                    </div>
+                    <svg id="keysArrow" class="w-5 h-5 text-neutral-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+                <div id="keysPanel" class="hidden">
+                    <div id="keysList" class="p-4 space-y-3 max-h-96 overflow-y-auto">
+                        <p class="text-neutral-500 text-center py-8">У вас пока нет ключей</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="bg-[#111] rounded-2xl border border-white/10 p-6">
+                <h3 class="font-bold text-xl mb-6 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    Настройки
+                </h3>
+                
+                <!-- Change Nickname -->
+                <div class="mb-6 pb-6 border-b border-white/5">
+                    <label class="block text-neutral-400 text-sm mb-3 font-medium">Сменить никнейм</label>
+                    <div class="flex gap-3">
+                        <input type="text" id="newNickname" placeholder="Новый никнейм" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-white/30 transition">
+                        <button onclick="changeNickname()" class="bg-white hover:bg-neutral-200 text-black px-6 py-3 rounded-xl font-semibold transition">Изменить</button>
+                    </div>
+                </div>
+
+                <!-- Change Password -->
+                <div class="mb-8">
+                    <label class="block text-neutral-400 text-sm mb-3 font-medium">Сменить пароль</label>
+                    <div class="space-y-3">
+                        <input type="password" id="oldPassword" placeholder="Текущий пароль" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                        <input type="password" id="newPassword" placeholder="Новый пароль (мин. 6 символов)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                        <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                        <button onclick="changePassword()" class="w-full bg-white hover:bg-neutral-200 text-black px-6 py-3.5 rounded-xl font-semibold transition">Сменить пароль</button>
+                    </div>
+                </div>
+
+                <!-- Delete Account -->
+                <div class="pt-6 border-t border-white/5">
+                    <button onclick="showModal('deleteAccount')" class="flex items-center gap-2 text-red-400 hover:text-red-300 transition font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Удалить аккаунт
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#111] rounded-2xl p-8 max-w-md w-full border border-white/10 relative">
+            <button onclick="hideModal('login')" class="absolute top-4 right-4 w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white transition">&times;</button>
+            <h2 class="text-2xl font-bold mb-2">Вход в аккаунт</h2>
+            <p class="text-neutral-500 mb-6">Войдите в свой аккаунт DiamonD</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-neutral-400 text-sm mb-2">Никнейм или Email</label>
+                    <input type="text" id="loginEmail" placeholder="Ваш ник или email" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-sm mb-2">Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                </div>
+                <button onclick="login()" class="w-full bg-white hover:bg-neutral-200 text-black py-4 rounded-xl font-bold transition">Войти</button>
+                <p class="text-center text-neutral-500 mb-2">Нет аккаунта? <a href="#" onclick="showModal('register')" class="text-white hover:underline font-medium">Регистрация</a></p>
+                <p class="text-center"><a href="#" onclick="showModal('forgotPassword')" class="text-neutral-500 hover:text-white text-sm transition">Забыли пароль?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#111] rounded-2xl p-8 max-w-md w-full border border-white/10 relative">
+            <button onclick="hideModal('register')" class="absolute top-4 right-4 w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white transition">&times;</button>
+            <h2 class="text-2xl font-bold mb-2">Регистрация</h2>
+            <p class="text-neutral-500 mb-6">Создайте аккаунт DiamonD</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-neutral-400 text-sm mb-2">Никнейм</label>
+                    <input type="text" id="regName" placeholder="Ваш никнейм" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-sm mb-2">Email</label>
+                    <input type="email" id="regEmail" placeholder="example@mail.ru" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-sm mb-2">Пароль</label>
+                    <input type="password" id="regPassword" placeholder="Минимум 6 символов" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                </div>
+                <button onclick="register()" class="w-full bg-white hover:bg-neutral-200 text-black py-4 rounded-xl font-bold transition">Зарегистрироваться</button>
+                <p class="text-center text-neutral-500">Есть аккаунт? <a href="#" onclick="showModal('login')" class="text-white hover:underline font-medium">Войти</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#111] rounded-2xl p-8 max-w-md w-full border border-white/10 relative">
+            <button onclick="hideModal('forgotPassword')" class="absolute top-4 right-4 w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white transition">&times;</button>
+            <h2 class="text-2xl font-bold mb-2">Восстановление пароля</h2>
+            <p class="text-neutral-500 mb-6">Введите email для восстановления доступа</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-neutral-400 text-sm mb-2">Email</label>
+                    <input type="email" id="forgotEmail" placeholder="Ваш email" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                </div>
+                <button onclick="sendResetEmail()" class="w-full bg-white hover:bg-neutral-200 text-black py-4 rounded-xl font-bold transition">Отправить письмо</button>
+                <p class="text-center"><a href="#" onclick="showModal('login')" class="text-neutral-500 hover:text-white text-sm transition">Вернуться к входу</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Preview Modal -->
+    <div id="emailPreviewModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-[#111] rounded-2xl max-w-lg w-full border border-white/10 relative my-8">
+            <button onclick="hideModal('emailPreview')" class="absolute top-4 right-4 w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white transition z-10">&times;</button>
+            <div class="p-6 border-b border-white/10">
+                <p class="text-neutral-500 text-sm mb-1">Письмо отправлено на:</p>
+                <p class="font-medium" id="emailTo">user@example.com</p>
+            </div>
+            <div id="emailContent" class="p-0"></div>
+            <div class="p-6 border-t border-white/10">
+                <button onclick="closeEmailAndEnterCode()" class="w-full bg-white hover:bg-neutral-200 text-black py-4 rounded-xl font-bold transition">Ввести код</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enter Code Modal -->
+    <div id="enterCodeModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#111] rounded-2xl p-8 max-w-md w-full border border-white/10 relative">
+            <button onclick="hideModal('enterCode')" class="absolute top-4 right-4 w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white transition">&times;</button>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/10">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Введите код</h2>
+                <p class="text-neutral-500">Введите код из письма, отправленного на вашу почту</p>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="resetCodeInput" placeholder="Введите 6-значный код" maxlength="6" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 focus:outline-none focus:border-white/30 transition text-center text-2xl font-bold tracking-[0.5em] uppercase">
+                <button onclick="verifyResetCode()" class="w-full bg-white hover:bg-neutral-200 text-black py-4 rounded-xl font-bold transition">Подтвердить</button>
+                <p class="text-center"><a href="#" onclick="showModal('forgotPassword')" class="text-neutral-500 hover:text-white text-sm transition">Отправить код повторно</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="resetPasswordModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#111] rounded-2xl p-8 max-w-md w-full border border-white/10 relative">
+            <button onclick="hideModal('resetPassword')" class="absolute top-4 right-4 w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white transition">&times;</button>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/10">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Новый пароль</h2>
+                <p class="text-neutral-500">Введите новый пароль для аккаунта</p>
+            </div>
+            <div class="space-y-4">
+                <input type="password" id="resetNewPassword" placeholder="Новый пароль (мин. 6 символов)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                <input type="password" id="resetConfirmPassword" placeholder="Подтвердите пароль" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-white/30 transition">
+                <button onclick="resetPassword()" class="w-full bg-white hover:bg-neutral-200 text-black py-4 rounded-xl font-bold transition">Сохранить пароль</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="deleteAccountModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#111] rounded-2xl p-8 max-w-md w-full border border-red-500/20 relative">
+            <button onclick="hideModal('deleteAccount')" class="absolute top-4 right-4 w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white transition">&times;</button>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Удаление аккаунта</h2>
+                <p class="text-neutral-500">Это действие необратимо. Все ваши данные будут удалены.</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="hideModal('deleteAccount')" class="flex-1 bg-white/5 hover:bg-white/10 py-4 rounded-xl font-semibold transition border border-white/10">Отмена</button>
+                <button onclick="deleteAccount()" class="flex-1 bg-red-500 hover:bg-red-600 py-4 rounded-xl font-bold transition">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 px-6 py-4 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 border">
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-10 px-6 border-t border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col items-center gap-6">
+                <a href="index.html" class="flex items-center gap-3">
+                    <img src="p3.png" alt="DiamonD" class="w-8 h-8 rounded-lg">
+                    <span class="text-lg font-bold tracking-tight">DiamonD</span>
+                </a>
+                <div class="flex items-center gap-6 text-sm">
+                    <a href="https://discord.com/users/ebatelmamok100_7" target="_blank" class="text-neutral-500 hover:text-white transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                        ebatelmamok100_7
+                    </a>
+                    <a href="https://t.me/arishka_332" target="_blank" class="text-neutral-500 hover:text-white transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        @arishka_332
+                    </a>
+                </div>
+                <div class="flex items-center gap-6 text-sm">
+                    <a href="privacy.html" class="text-neutral-500 hover:text-white transition">Конфиденциальность</a>
+                    <a href="terms.html" class="text-neutral-500 hover:text-white transition">Условия использования</a>
+                </div>
+                <p class="text-neutral-600 text-sm">© 2024 DiamonD. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="module" src="app.js"></script>
+    <script type="module">
+        import { } from './app.js';
+        
+        // Show cached data immediately
+        const cachedUser = sessionStorage.getItem('currentUserData');
+        if (cachedUser) {
+            try {
+                const user = JSON.parse(cachedUser);
+                if (user) {
+                    document.getElementById('notLoggedIn').classList.add('hidden');
+                    document.getElementById('profileContent').classList.remove('hidden');
+                    document.getElementById('profileName').textContent = user.name;
+                    document.getElementById('profileEmail').textContent = user.email;
+                    document.getElementById('profileAvatar').textContent = user.name[0].toUpperCase();
+                }
+            } catch(e) {}
+        }
+        
+        window.addEventListener('appReady', () => {
+            updateProfileUI();
+        });
+
+        window.toggleKeys = function() {
+            const panel = document.getElementById('keysPanel');
+            const arrow = document.getElementById('keysArrow');
+            panel.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        };
+
+        window.toggleNotifications = function() {
+            const panel = document.getElementById('notificationsPanel');
+            const arrow = document.getElementById('notificationsArrow');
+            panel.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        };
+
+        async function updateProfileUI() {
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                document.getElementById('notLoggedIn').classList.add('hidden');
+                document.getElementById('profileContent').classList.remove('hidden');
+                document.getElementById('profileName').textContent = currentUser.name;
+                document.getElementById('profileEmail').textContent = currentUser.email;
+                document.getElementById('profileAvatar').textContent = currentUser.name[0].toUpperCase();
+                document.getElementById('profileKeysCount').textContent = currentUser.keys ? currentUser.keys.length : 0;
+                document.getElementById('profileSpent').textContent = (currentUser.totalSpent || 0) + ' ₽';
+                document.getElementById('profileDate').textContent = currentUser.registeredAt || '—';
+                
+                // Rank
+                const rank = getUserRank(currentUser.totalSpent || 0);
+                document.getElementById('profileRankBadge').innerHTML = `${rank.icon} ${rank.name}`;
+                document.getElementById('profileRankBadge').className = `text-sm px-2 py-0.5 rounded-lg bg-neutral-800 ${rank.color}`;
+                
+                const roleEl = document.getElementById('profileRole');
+                if (currentUser.role === 'admin') {
+                    roleEl.innerHTML = '👑 Администратор';
+                    roleEl.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 text-amber-400 rounded-lg text-sm font-medium border border-amber-500/20';
+                    document.getElementById('adminLink').classList.remove('hidden');
+                }
+                
+                document.getElementById('navAuth').innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-neutral-400 text-sm hidden md:block">${currentUser.name}</span>
+                        <button onclick="logout()" class="bg-white/5 hover:bg-red-500/10 text-neutral-400 hover:text-red-400 px-5 py-2.5 rounded-xl font-semibold transition text-sm border border-white/10">Выйти</button>
+                    </div>
+                `;
+                
+                updateKeysList(currentUser);
+                updateNotificationsList(currentUser);
+                checkKeyNotifications(currentUser);
+            } else {
+                document.getElementById('notLoggedIn').classList.remove('hidden');
+                document.getElementById('profileContent').classList.add('hidden');
+            }
+        }
+
+        function updateKeysList(user) {
+            const keysList = document.getElementById('keysList');
+            const keys = user.keys || [];
+            
+            if (keys.length === 0) {
+                keysList.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-neutral-500 mb-4">У вас пока нет ключей</p>
+                        <a href="shop.html" class="inline-block bg-white hover:bg-neutral-200 text-black px-6 py-2.5 rounded-xl font-semibold transition text-sm">Перейти в магазин</a>
+                    </div>
+                `;
+            } else {
+                keysList.innerHTML = keys.map(k => `
+                    <div class="bg-white/5 rounded-xl p-4 border border-white/5 hover:border-white/10 transition">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="font-bold">${k.name}</span>
+                                    ${k.isGift ? '<span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">Подарок</span>' : ''}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <code class="font-mono text-sm text-neutral-400 bg-black/30 px-2 py-1 rounded select-all">${k.key}</code>
+                                    <button onclick="copyToClipboard('${k.key}')" class="text-neutral-500 hover:text-white transition p-1.5 hover:bg-white/10 rounded-lg" title="Скопировать">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="text-left md:text-right">
+                                <p class="text-sm text-neutral-500">${k.purchaseDate}</p>
+                                ${!k.isGift ? `<p class="text-white font-bold">${k.price} ₽</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function updateNotificationsList(user) {
+            const list = document.getElementById('notificationsList');
+            const notifications = user.notifications || [];
+            const unreadBadge = document.getElementById('unreadBadge');
+            
+            const unread = notifications.filter(n => !n.isRead).length;
+            if (unread > 0) {
+                unreadBadge.textContent = unread;
+                unreadBadge.classList.remove('hidden');
+            } else {
+                unreadBadge.classList.add('hidden');
+            }
+            
+            if (notifications.length === 0) {
+                list.innerHTML = '<p class="text-neutral-500 text-center py-8">Нет уведомлений</p>';
+            } else {
+                list.innerHTML = notifications.map((n, i) => `
+                    <div class="bg-white/5 rounded-xl p-4 border ${n.isRead ? 'border-white/5' : 'border-blue-500/30 bg-blue-500/5'}">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold ${!n.isRead ? 'text-blue-400' : ''}">${n.subject}</h4>
+                            <span class="text-neutral-500 text-xs">${n.date}</span>
+                        </div>
+                        <p class="text-neutral-400 text-sm mb-3">${n.message}</p>
+                        <div class="flex gap-2">
+                            ${!n.isRead ? `<button onclick="markAsRead(${i})" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition">Прочитано</button>` : ''}
+                            <button onclick="deleteNotification(${i})" class="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg transition">Удалить</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.markAsRead = async function(index) {
+            const currentUser = getCurrentUser();
+            if (!currentUser.notifications) return;
+            
+            currentUser.notifications[index].isRead = true;
+            await updateDoc(doc(db, "users", currentUser.id), { notifications: currentUser.notifications });
+            setCurrentUser(currentUser);
+            updateNotificationsList(currentUser);
+        };
+
+        window.deleteNotification = async function(index) {
+            const currentUser = getCurrentUser();
+            if (!currentUser.notifications) return;
+            
+            currentUser.notifications.splice(index, 1);
+            await updateDoc(doc(db, "users", currentUser.id), { notifications: currentUser.notifications });
+            setCurrentUser(currentUser);
+            updateNotificationsList(currentUser);
+            showToast('Уведомление удалено');
+        };
+
+        function checkKeyNotifications(user) {
+            const container = document.getElementById('keyNotifications');
+            const keys = user.keys || [];
+            const now = new Date();
+            const notifications = [];
+            
+            keys.forEach(key => {
+                if (key.type === 'forever') return;
+                
+                const purchaseDate = parseDate(key.purchaseDate);
+                if (!purchaseDate) return;
+                
+                const expiryMonths = {
+                    'week': 1,
+                    'month': 2,
+                    'halfyear': 6
+                };
+                
+                const months = expiryMonths[key.type] || 1;
+                const expiryDate = new Date(purchaseDate);
+                expiryDate.setMonth(expiryDate.getMonth() + months);
+                
+                const daysLeft = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+                
+                if (daysLeft <= 7 && daysLeft > 0) {
+                    notifications.push({
+                        key: key.name,
+                        daysLeft
+                    });
+                }
+            });
+            
+            if (notifications.length > 0) {
+                container.innerHTML = notifications.map(n => `
+                    <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="font-medium text-amber-400">Ключ скоро истечёт!</p>
+                            <p class="text-neutral-400 text-sm">${n.key} истекает через ${n.daysLeft} дн.</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('.');
+            if (parts.length === 3) {
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+            return null;
+        }
+
+        window.changePassword = async function() {
+            const oldPass = document.getElementById('oldPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            
+            if (!oldPass || !newPass || !confirmPass) {
+                showToast('Заполните все поля', 'error');
+                return;
+            }
+            
+            const currentUser = getCurrentUser();
+            
+            if (oldPass !== currentUser.password) {
+                showToast('Неверный текущий пароль', 'error');
+                return;
+            }
+            
+            if (newPass.length < 6) {
+                showToast('Новый пароль минимум 6 символов', 'error');
+                return;
+            }
+            
+            if (newPass !== confirmPass) {
+                showToast('Пароли не совпадают', 'error');
+                return;
+            }
+            
+            if (oldPass === newPass) {
+                showToast('Новый пароль должен отличаться от старого', 'error');
+                return;
+            }
+            
+            // Update in Firebase
+            await updateDoc(doc(db, "users", currentUser.id), { password: newPass });
+            currentUser.password = newPass;
+            setCurrentUser(currentUser);
+            
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            showToast('Пароль успешно изменён!');
+        };
+
+        window.deleteAccount = async function() {
+            const currentUser = getCurrentUser();
+            await deleteDoc(doc(db, "users", currentUser.id));
+            setCurrentUser(null);
+            hideModal('deleteAccount');
+            showToast('Аккаунт удалён');
+            setTimeout(() => location.reload(), 1000);
+        };
+    </script>
+</body>
+</html>
